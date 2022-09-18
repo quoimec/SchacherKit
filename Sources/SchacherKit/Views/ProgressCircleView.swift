@@ -19,7 +19,7 @@ struct ProgressCircleView: View {
     private let gradient_a: Gradient
     private let gradient_b: Gradient
     
-    init(progress: Binding<Double>, colour: Colour, line: CGFloat = 30) {
+    init(progress: Binding<Double>, colour: Colour, line: CGFloat) {
         
         self._progress = progress
         
