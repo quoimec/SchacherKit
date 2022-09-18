@@ -11,10 +11,13 @@ import UIKit
 
 public typealias Colour = Color
 
-extension Color {
+extension Colour {
     
+    /// Allows for a colour object to be initialised from a valid hex string
+    /// - Parameter hex: The colour specied in hex form (# is allowed)
     public init(hex: String) {
         
+        // Removes any leading hash values
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         
         var int: UInt64 = 0
@@ -43,6 +46,9 @@ extension Color {
         
     }
     
+    /// Applies a simple darkening process over an existing colour to get a darker version of the colour
+    /// - Parameter percentage: The percentage increase in darkness desired
+    /// - Returns: A new, darkened colour
     public func darken(percentage: Double) -> Colour {
         
         let multiplier = 1.0 - percentage
