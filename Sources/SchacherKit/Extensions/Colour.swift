@@ -46,12 +46,79 @@ extension Colour {
         
     }
     
-    /// Applies a simple darkening process over an existing colour to get a darker version of the colour
+    /// Allows for a colour object to be initialised from a HSL value input
+    /// - Parameters:
+    ///   - hue: The pure pigment value from a colour wheel, between 0 & 359
+    ///   - saturation: How dark or light the hue is, percentage between 0.0 and 1.0
+    ///   - luminance: How bright the hue is, percentage between 0.0 and 1.0
+    ///   - alpha: Optional alpha channel override, defaults to 1.0
+    public init(hue: Int, saturation: Double, luminance: Double, alpha: Double = 1.0) {
+        
+        // Methodology from StackOverflow: https://stackoverflow.com/questions/24852345/hsv-to-rgb-color-conversion
+        
+        if luminance == 0 {
+            self.init(.sRGB, red: 0, green: 0, blue: 0, opacity: alpha)
+        } else {
+            
+            var hue = Double(hue == 360 ? 0 : hue) / 360.0
+            
+            var step = Int(floor(hue * 6.0))
+            var remainder = (hue * 6.0) - Double(step)
+            
+            let w = luminance * (1.0 - saturation)
+            let q = luminance * (1.0 - saturation * remainder)
+            let t = luminance * (1.0 - saturation * (1.0 - remainder))
+            let v = luminance
+            
+            switch step {
+                
+                case 0: self.init(.sRGB, red: v, green: t, blue: w, opacity: alpha)
+                case 1: self.init(.sRGB, red: q, green: v, blue: w, opacity: alpha)
+                case 2: self.init(.sRGB, red: w, green: v, blue: t, opacity: alpha)
+                case 3: self.init(.sRGB, red: w, green: q, blue: v, opacity: alpha)
+                case 4: self.init(.sRGB, red: t, green: w, blue: v, opacity: alpha)
+                case 5: self.init(.sRGB, red: v, green: w, blue: q, opacity: alpha)
+                
+                default: fatalError("Invalid step: \(step)")
+                
+            }
+            
+            
+        }
+        
+    }
+    
+    
+    /// Applies a simple darkening process over an existing colour to get a darker version of the base colour
     /// - Parameter percentage: The percentage increase in darkness desired
     /// - Returns: A new, darkened colour
     public func darken(percentage: Double) -> Colour {
         
         let multiplier = 1.0 - percentage
+        
+        guard var components = UIColor(self).cgColor.components, components.count >= 3 else {
+            fatalError()
+        }
+        
+        if components.count == 3 {
+            components.append(1.0)
+        }
+        
+        return Colour(
+            red: Double(components[0]) * multiplier,
+            green: Double(components[1]) * multiplier,
+            blue: Double(components[2]) * multiplier,
+            opacity: Double(components[3])
+        )
+        
+    }
+    
+    /// Applies a simple lightening process over an existing colour to get a lighter version of the base colour
+    /// - Parameter percentage: The percentage increase in lightness desired
+    /// - Returns: A new, lightened colour
+    public func lighten(percentage: Double) -> Colour {
+        
+        let multiplier = percentage
         
         guard var components = UIColor(self).cgColor.components, components.count >= 3 else {
             fatalError()
