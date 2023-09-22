@@ -48,11 +48,11 @@ extension Colour {
     
     /// Allows for a colour object to be initialised from a HSL value input
     /// - Parameters:
-    ///   - hue: The pure pigment value from a colour wheel, between 0 & 359
+    ///   - hue: The pure pigment value from a colour wheel, between 0.0 ..\< 360.0
     ///   - saturation: How dark or light the hue is, percentage between 0.0 and 1.0
     ///   - luminance: How bright the hue is, percentage between 0.0 and 1.0
     ///   - alpha: Optional alpha channel override, defaults to 1.0
-    public init(hue: Int, saturation: Double, luminance: Double, alpha: Double = 1.0) {
+    public init(hue: Double, saturation: Double, luminance: Double, alpha: Double = 1.0) {
         
         // Methodology from StackOverflow: https://stackoverflow.com/questions/24852345/hsv-to-rgb-color-conversion
         
@@ -60,7 +60,7 @@ extension Colour {
             self.init(.sRGB, red: 0, green: 0, blue: 0, opacity: alpha)
         } else {
             
-            var hue = Double(hue == 360 ? 0 : hue) / 360.0
+            var hue = (hue == 360 ? 0 : hue) / 360.0
             
             var step = Int(floor(hue * 6.0))
             var remainder = (hue * 6.0) - Double(step)
