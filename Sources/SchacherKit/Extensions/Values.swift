@@ -32,6 +32,11 @@ extension Double {
         return min(max(self, limits.lowerBound), limits.upperBound)
         
     }
+    
+    public func rounded(to: Int) -> Double {
+        let divisor = pow(10.0, Double(to))
+        return (self * divisor).rounded() / divisor
+    }
 
 }
 
