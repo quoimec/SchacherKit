@@ -60,10 +60,11 @@ extension Colour {
             self.init(.sRGB, red: 0, green: 0, blue: 0, opacity: alpha)
         } else {
             
-            var hue = (hue == 360 ? 0 : hue) / 360.0
+            // Because hue is a circle, we wrap any value greater than 360 around to 0
+            let hue = hue.truncatingRemainder(dividingBy: 360.0)
             
-            var step = Int(floor(hue * 6.0))
-            var remainder = (hue * 6.0) - Double(step)
+            let step = Int(floor(hue * 6.0))
+            let remainder = (hue * 6.0) - Double(step)
             
             let w = luminance * (1.0 - saturation)
             let q = luminance * (1.0 - saturation * remainder)
