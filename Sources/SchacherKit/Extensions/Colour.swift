@@ -61,7 +61,7 @@ extension Colour {
         } else {
             
             // Because hue is a circle, we wrap any value greater than 360 around to 0
-            let hue = hue.truncatingRemainder(dividingBy: 360.0)
+            let hue = hue.truncatingRemainder(dividingBy: 360.0) / 360.0
             
             let step = Int(floor(hue * 6.0))
             let remainder = (hue * 6.0) - Double(step)
